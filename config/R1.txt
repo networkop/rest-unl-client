@@ -1,0 +1,19 @@
+!
+conf t
+!
+hostname R1
+!
+interface Ethernet0/0
+no shut
+ip address 12.12.12.1 255.255.255.0
+!
+interface Ethernet 0/1
+no shut
+ip address 13.13.13.1 255.255.255.0
+!
+interface Loopback0
+ip address 1.1.1.1 255.255.255.255
+!
+router ospf 1
+network 0.0.0.0 0.0.0.0 area 0
+!

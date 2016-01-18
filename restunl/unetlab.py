@@ -90,8 +90,8 @@ class UnlLab(object):
         resp = self.unl.get_object(api_url)
         return resp
 
-    def create_net(self, name):
-        return UnlNet(self, name)
+    def create_net(self, name, net_type='bridge'):
+        return UnlNet(self, name, net_type)
 
     def get_nets(self):
         api_call = REST_SCHEMA['get_nets']
@@ -167,10 +167,10 @@ class UnlNode(object):
 
 class UnlNet(object):
 
-    def __init__(self, lab, name):
+    def __init__(self, lab, name, net_type):
         api_call = REST_SCHEMA['create_net']
         self.unl, self.lab, self.name = lab.unl, lab, name
-        payload = {'type': 'bridge', 'name': self.name}
+        payload = {'type': net_type, 'name': self.name}
         api_url = api_call.format(api_call, lab_name=append_unl(self.lab.name))
         self.resp = self.unl.add_object(api_url, data=payload)
         self.net = self._get_net()

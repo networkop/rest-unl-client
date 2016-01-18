@@ -12,8 +12,12 @@ no shut
 ip address 13.13.13.1 255.255.255.0
 !
 interface Loopback0
-ip address 1.1.1.1 255.255.255.255
+ip address 10.0.0.1 255.255.255.255
 !
 router ospf 1
 network 0.0.0.0 0.0.0.0 area 0
+!
+interface Ethernet0/3
+no shut
+ip address 192.168.247.21 255.255.255.0
 !

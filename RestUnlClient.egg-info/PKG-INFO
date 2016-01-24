@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: RestUnlClient
+Version: 0.0.4
+Summary: UNetLab REST Client Library
+Home-page: https://github.com/pypa/sampleproject
+Author: Michael Kashin
+Author-email: UNKNOWN
+License: MIT
+Description: UNKNOWN
+Keywords: unetlab rest api sdk library client
+Platform: UNKNOWN

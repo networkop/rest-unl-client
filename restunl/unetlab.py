@@ -82,6 +82,13 @@ class UnlLab(object):
         self.resp = self.unl.add_object(api_call, data=payload)
 
     def create_node(self, device):
+        api_call = REST_SCHEMA['create_node']
+        api_url = api_call.format(api_call, lab_name=append_unl(self.name))
+        payload = device.to_json()
+        self.unl.add_object(api_url, data=payload)
+        return UnlNode(self, device)
+
+    def get_node(self, device):
         return UnlNode(self, device)
 
     def get_nodes(self):
@@ -135,10 +142,6 @@ class UnlNode(object):
         self.unl = lab.unl
         self.lab = lab
         self.device = device
-        api_call = REST_SCHEMA['create_node']
-        api_url = api_call.format(api_call, lab_name=append_unl(self.lab.name))
-        payload = self.device.to_json()
-        self.resp = self.unl.add_object(api_url, data=payload)
         self.node = self._get_node()
         self.id = self.node['id']
         self.url = self.node['url']

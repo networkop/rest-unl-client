@@ -57,6 +57,17 @@ class BasicUnlLabTest(UnlTests):
         self.unl.delete_lab(LAB_NAME)
         self.assertEqual(200, resp.status_code)
 
+    def test_create_node(self):
+        lab = self.unl.create_lab(LAB_NAME)
+        node = lab.create_node(Router('R1'))
+        self.assertIn('telnet', node.url)
+
+    def test_get_node(self):
+        lab = self.unl.create_lab(LAB_NAME)
+        device = Router('R1')
+        lab.create_node(device)
+        node = lab.get_node(Router('R1'))
+        self.assertIn('telnet', node.url)
 
 class AdvancedUnlNodeTest(UnlTests):
 

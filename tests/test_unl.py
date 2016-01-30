@@ -42,9 +42,9 @@ class BasicUnlLabTest(UnlTests):
 
     def test_create_lab(self):
         self.unl.delete_lab(LAB_NAME)
-        resp = self.unl.create_lab(LAB_NAME).resp
+        lab = self.unl.create_lab(LAB_NAME)
         self.unl.delete_lab(LAB_NAME)
-        self.assertEqual(200, resp.status_code)
+        self.assertEqual(LAB_NAME, lab.name)
 
     def test_delete_lab(self):
         self.unl.create_lab(LAB_NAME)

@@ -21,6 +21,7 @@ class RestServer(object):
             print('*** Error calling %s: %s', url, e.message)
         if self.cookies and 400 < response.status_code < 499:
             self.login(self.user, self.pwd)
+            response = requests.request(method, url,  json=data, cookies=self.cookies)
         return response
 
     def get_object(self, api_call, data=None):

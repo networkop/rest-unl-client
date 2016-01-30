@@ -59,6 +59,16 @@ class UnlServer(RestServer):
         return resp
 
     def create_lab(self, name):
+        api_call = REST_SCHEMA['create_lab']
+        payload = {
+           "path": "/",
+           "name": name,
+           "version": "1"
+        }
+        self.add_object(api_call, data=payload)
+        return UnlLab(self, name)
+
+    def get_lab(self, name):
         return UnlLab(self, name)
 
     def delete_lab(self, labname):
@@ -71,15 +81,8 @@ class UnlServer(RestServer):
 class UnlLab(object):
 
     def __init__(self, unl, name):
-        api_call = REST_SCHEMA['create_lab']
-        payload = {
-           "path": "/",
-           "name": name,
-           "version": "1"
-        }
         self.name = name
         self.unl = unl
-        self.resp = self.unl.add_object(api_call, data=payload)
 
     def create_node(self, device):
         api_call = REST_SCHEMA['create_node']

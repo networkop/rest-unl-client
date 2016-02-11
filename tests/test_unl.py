@@ -11,6 +11,7 @@ CONFIG = 'conf t \r\n hostname ' + HOSTNAME
 VERIFY = 'show run | i hostname'
 
 
+
 class UnlTests(unittest.TestCase):
 
     def setUp(self):
@@ -115,11 +116,11 @@ class AdvancedUnlNodeTest(UnlTests):
         self.assertEqual(201, resp1.status_code)
         self.assertEqual(201, resp2.status_code)
 
-    @unittest.skip("works but takes too long")
+    #@unittest.skip("works but takes too long")
     def test_push_config(self):
         self.lab.start_all_nodes()
         self.node_one.configure(CONFIG)
         resp = self.node_one.configure(VERIFY)
-        self.lab.start_all_nodes()
+        self.lab.stop_all_nodes()
         self.assertIn(HOSTNAME, resp)
 

@@ -4,6 +4,7 @@ from restunl.helper import *
 
 LAB_NAME = 'test_1'
 CONF_PATH = '..\\config\\'
+IMAGE = 'L3-ADVENTERPRISEK9-LATEST.bin'
 EXT_NET = {('R1', 'Ethernet0/3'): 'pnet1'}
 TOPOLOGY = {('R1', 'Ethernet0/0'): ('R2', 'Ethernet0/0'),
             ('R2', 'Ethernet0/1'): ('R3', 'Ethernet0/0'),
@@ -13,10 +14,10 @@ TOPOLOGY = {('R1', 'Ethernet0/0'): ('R2', 'Ethernet0/0'),
 def built_topo(lab, nodes, topo):
     for (a_name, a_intf), (b_name, b_intf) in topo.iteritems():
        if not a_name in nodes:
-           nodes[a_name] = lab.create_node(Router(a_name))
+           nodes[a_name] = lab.create_node(Router(a_name, IMAGE))
            print("*** NODE {} CREATED".format(a_name))
        if not b_name in nodes:
-           nodes[b_name] = lab.create_node(Router(b_name))
+           nodes[b_name] = lab.create_node(Router(b_name, IMAGE))
            print("*** NODE {} CREATED".format(b_name))
        node_a = nodes[a_name]
        node_b = nodes[b_name]
@@ -26,10 +27,15 @@ def built_topo(lab, nodes, topo):
 
 
 def configure_nodes(nodes, path):
+    import threading
+    processes = []
     for node_name in nodes:
         conf = read_file('{0}{1}.txt'.format(path, node_name))
-        nodes[node_name].configure(conf)
+        process = threading.Thread(target=nodes[node_name].configure, args=(conf,))
+        process.start()
+        processes.append(process)
         print("*** NODE {} CONFIGURED".format(node_name))
+    [p.join() for p in processes]
     return None
 
 

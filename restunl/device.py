@@ -60,7 +60,7 @@ class Switch(Device):
     def __init__(self, name, image=None):
         if image:
             Switch.defaults['image'] = image
-        for key, value in Router.defaults.items():
+        for key, value in Switch.defaults.items():
             setattr(self, key, value)
-        super(Router, self).__init__(name)
+        super(Switch, self).__init__(name)
 

@@ -14,6 +14,6 @@ setup(
     packages=find_packages(exclude=['tests']),
     keywords='unetlab rest api sdk library client',
     license='MIT',
-    url='https://github.com/pypa/sampleproject',
+    url='https://github.com/networkop/rest-blog-unl-client.git',
     install_requires=['requests'],
 )

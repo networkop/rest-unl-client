@@ -7,9 +7,8 @@ USERNAME = 'admin'
 PASSWORD = 'unl'
 LAB_NAME = 'unittest_lab'
 HOSTNAME = 'UNITT'
-CONFIG = 'conf t \r\n hostname ' + HOSTNAME
-VERIFY = 'show run | i hostname'
-
+CONFIG = 'enable \r conf t \r hostname ' + HOSTNAME
+VERIFY = 'enable \r show run | i hostname'
 
 
 class UnlTests(unittest.TestCase):
@@ -116,7 +115,7 @@ class AdvancedUnlNodeTest(UnlTests):
         self.assertEqual(201, resp1.status_code)
         self.assertEqual(201, resp2.status_code)
 
-    #@unittest.skip("works but takes too long")
+    # @unittest.skip("works but takes too long")
     def test_push_config(self):
         self.lab.start_all_nodes()
         self.node_one.configure(CONFIG)

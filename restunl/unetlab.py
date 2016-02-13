@@ -100,7 +100,14 @@ class UnlLab(object):
         resp = self.unl.get_object(api_url)
         return resp
 
+    def get_net(self, name, net_type='bridge'):
+        return UnlNet(self, name, net_type)
+
     def create_net(self, name, net_type='bridge'):
+        api_call = REST_SCHEMA['create_net']
+        api_url = api_call.format(api_call, lab_name=append_unl(self.name))
+        payload = {'type': net_type, 'name': name}
+        self.unl.add_object(api_url, data=payload)
         return UnlNet(self, name, net_type)
 
     def get_nets(self):
@@ -149,6 +156,7 @@ class UnlNode(object):
         self.id = self.node['id']
         self.url = self.node['url']
         self.device.set_url(self.url)
+        self.intf_to_net = dict()
 
     def _get_node(self):
         nodes = self.lab.get_nodes().json()['data']
@@ -157,28 +165,32 @@ class UnlNode(object):
     def connect_interface(self, intf_name, net):
         api_call = REST_SCHEMA['connect_interface']
         api_url = api_call.format(api_call, lab_name=append_unl(self.lab.name), node_id=self.id)
-        payload = {get_intf_id(intf_name): net.id}
+        self.intf_to_net[intf_name] = net.name
+        payload = {self.device.get_intf_id(intf_name): net.id}
         resp = self.unl.update_object(api_url, data=payload)
         return resp
 
     def connect_node(self, local_intf, other_node, other_intf):
-        net = self.lab.create_net(name='_'.join([self.device.name, other_node.device.name]))
+        net_local = self.intf_to_net.get(local_intf)
+        net_other = other_node.intf_to_net.get(other_intf)
+        if net_local:
+            net = self.lab.get_net(net_local)
+        elif net_other:
+            net = self.lab.get_net(net_other)
+        else:
+            net = self.lab.create_net(name='_'.join([self.device.name, other_node.device.name]))
         resp1 = self.connect_interface(local_intf, net)
         resp2 = other_node.connect_interface(other_intf, net)
         return resp1, resp2
 
     def configure(self, text):
-        return self.device.send_config(wrap_conf(text))
+        return self.device.send_config(text)
 
 
 class UnlNet(object):
 
     def __init__(self, lab, name, net_type):
-        api_call = REST_SCHEMA['create_net']
         self.unl, self.lab, self.name = lab.unl, lab, name
-        payload = {'type': net_type, 'name': self.name}
-        api_url = api_call.format(api_call, lab_name=append_unl(self.lab.name))
-        self.resp = self.unl.add_object(api_url, data=payload)
         self.net = self._get_net()
         self.id = self.net['id']
 

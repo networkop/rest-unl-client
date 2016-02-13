@@ -5,7 +5,8 @@ from restunl.helper import *
 LAB_NAME = 'test_1'
 TOPOLOGY = {('R1', 'Ethernet0/0'): ('R2', 'Ethernet0/0'),
             ('R2', 'Ethernet0/1'): ('R3', 'Ethernet0/0'),
-            ('R1', 'Ethernet0/1'): ('R3', 'Ethernet0/1')}
+            ('R1', 'Ethernet0/1'): ('R3', 'Ethernet0/1'),
+            ('R4', 'Ethernet0/0'): ('R1', 'Ethernet0/0')}
 
 
 def app():

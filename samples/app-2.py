@@ -1,6 +1,7 @@
 from restunl.unetlab import UnlServer
 from restunl.device import Router
 from restunl.helper import *
+import time
 
 LAB_NAME = 'test_1'
 CONF_PATH = '..\\config\\'
@@ -30,12 +31,14 @@ def configure_nodes(nodes, path):
     import threading
     processes = []
     for node_name in nodes:
-        conf = read_file('{0}{1}.txt'.format(path, node_name))
+        conf = 'enable\r'
+        conf += read_file('{0}{1}.txt'.format(path, node_name))
+        conf += 'end\r write\r'
         process = threading.Thread(target=nodes[node_name].configure, args=(conf,))
         process.start()
         processes.append(process)
-        print("*** NODE {} CONFIGURED".format(node_name))
     [p.join() for p in processes]
+    print("*** ALL NODES CONFIGURED")
     return None
 
 

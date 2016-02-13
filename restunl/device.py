@@ -1,11 +1,29 @@
 from telnetlib import Telnet
-from helper import *
+import time
+import re
 
 
-class Device(object):
+class IOL(object):
+
     def __init__(self, name):
         self.name = name
         self.url_ip, self.url_port = '', ''
+
+    @staticmethod
+    def get_intf_id(intf_name):
+        x, y = re.findall('\d+', intf_name)
+        return int(x) + (int(y) * 16)
+
+    @staticmethod
+    def send_and_wait(session, text):
+        session.read_very_eager()
+        result = ''
+        session.write(text)
+        while not any(stop_char in result[-5:] for stop_char in ['>', '#']):
+            session.write('\r\n')
+            result += session.read_very_eager()
+            time.sleep(0.1)
+        return result
 
     def __repr__(self):
         return type(self).__name__ + '(' + self.name + ')'
@@ -19,13 +37,14 @@ class Device(object):
 
     def send_config(self, config):
         session = Telnet(self.url_ip, self.url_port)
-        send_and_wait(session, '\r\n')
-        result = send_and_wait(session, config)
+        result = self.send_and_wait(session, '\r\n')
+        for line in config.splitlines():
+            result = self.send_and_wait(session, line)
         session.close()
         return result
 
 
-class Router(Device):
+class Router(IOL):
     defaults = {
         'template': 'iol',
         'count': 1,
@@ -45,7 +64,7 @@ class Router(Device):
         super(Router, self).__init__(name)
 
 
-class Switch(Device):
+class Switch(IOL):
     defaults = {
         'template': 'iol',
         'count': 1,
@@ -64,3 +83,12 @@ class Switch(Device):
             setattr(self, key, value)
         super(Switch, self).__init__(name)
 
+
+def main():
+    sw = Switch('sw', 'image')
+    print sw.image
+    print sw.ram
+
+
+if __name__ == '__main__':
+    main()

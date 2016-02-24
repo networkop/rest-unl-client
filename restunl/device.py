@@ -19,7 +19,7 @@ class IOL(object):
         session.read_very_eager()
         result = ''
         session.write(text)
-        while not any(stop_char in result[-5:] for stop_char in ['>', '#']):
+        while not any(stop_char in result[-5:] for stop_char in ['>', '#', 'no]:']):
             session.write('\r\n')
             result += session.read_very_eager()
             time.sleep(0.1)

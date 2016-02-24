@@ -135,7 +135,7 @@ class UnlLab(object):
         return resp
 
     def del_all_nodes(self):
-        node_dict = self.get_nodes().json()['data']
+        node_dict = self.get_nodes().json().get('data', {})
         for node_id in node_dict:
             self.delete_node(node_id)
         return None
@@ -159,7 +159,7 @@ class UnlNode(object):
         self.intf_to_net = dict()
 
     def _get_node(self):
-        nodes = self.lab.get_nodes().json()['data']
+        nodes = self.lab.get_nodes().json().get('data', {})
         return get_obj_by_name(nodes, self.device.name)
 
     def connect_interface(self, intf_name, net):
@@ -195,5 +195,5 @@ class UnlNet(object):
         self.id = self.net['id']
 
     def _get_net(self):
-        nets = self.lab.get_nets().json()['data']
+        nets = self.lab.get_nets().json().get('data', {})
         return get_obj_by_name(nets, self.name)

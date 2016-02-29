@@ -10,7 +10,7 @@ setup(
     description='UNetLab REST Client Library',
     author='Michael Kashin',
     long_description=read('README'),
-    version='0.1.1',
+    version='0.1.2',
     packages=find_packages(exclude=['tests']),
     keywords='unetlab rest api sdk library client',
     license='MIT',

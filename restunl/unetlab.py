@@ -183,6 +183,9 @@ class UnlNode(object):
         resp2 = other_node.connect_interface(other_intf, net)
         return resp1, resp2
 
+    def get_next_intf(self):
+        return self.device.get_next_intf()
+
     def configure(self, text):
         return self.device.send_config(text)
 

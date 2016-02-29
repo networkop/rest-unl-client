@@ -36,7 +36,9 @@ class IOL(object):
         else:
             intf_module = self.intf_index / 4
             intf_number = self.intf_index % 4
-        return 'Ethernet' + intf_module + '/' + intf_number
+        intf_name = 'Ethernet' + str(intf_module) + '/' + str(intf_number)
+        self.intf_index += 1
+        return intf_name
 
     def __repr__(self):
         return type(self).__name__ + '(' + self.name + ')'

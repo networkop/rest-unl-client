@@ -3,11 +3,16 @@ import time
 import re
 
 
+class UnetlabDeviceException(Exception):
+    pass
+
+
 class IOL(object):
 
     def __init__(self, name):
         self.name = name
         self.url_ip, self.url_port = '', ''
+        self.intf_index = 0
 
     @staticmethod
     def get_intf_id(intf_name):
@@ -24,6 +29,14 @@ class IOL(object):
             result += session.read_very_eager()
             time.sleep(0.1)
         return result
+
+    def get_next_intf(self):
+        if self.intf_index > 64:
+            raise UnetlabDeviceException('Too many interface configured')
+        else:
+            intf_module = self.intf_index / 4
+            intf_number = self.intf_index % 4
+        return 'Ethernet' + intf_module + '/' + intf_number
 
     def __repr__(self):
         return type(self).__name__ + '(' + self.name + ')'
@@ -50,7 +63,7 @@ class Router(IOL):
         'count': 1,
         'image': 'L2-ADVENTERPRISE-LATEST.bin',
         'ram': '256',
-        'ethernet': '2',
+        'ethernet': '16',
         'serial': '0',
         'type': 'iol',
         'config': 'unconfigured'
@@ -70,7 +83,7 @@ class Switch(IOL):
         'count': 1,
         'image': 'L3-ADVENTERPRISEK9-LATEST.bin',
         'ram': '256',
-        'ethernet': '2',
+        'ethernet': '16',
         'serial': '0',
         'type': 'iol',
         'config': 'unconfigured'
